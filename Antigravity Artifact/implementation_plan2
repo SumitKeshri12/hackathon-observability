@@ -1,0 +1,79 @@
+# Implementation Plan: AI-Scaffolded Observability Hackathon
+
+This plan outlines the step-by-step approach to building a production-ready Web App with Full-Stack Observability, leveraging AI for rapid development.
+
+## Review & Architectural Critique
+> [!IMPORTANT]
+> **Configuration Pollution Critique:** Placing [Dockerfile](file:///d:/laragon/www/Saturday%20Session/Saturday%20Hackathon/backend/Dockerfile) in the project root is acceptable for MVPs, but for highly maintainable systems, we should isolate **Infrastructure concerns** from **Application logic**.
+> - **Strict Decoupling:** Every service (Backend, Frontend) will have a dedicated `docker/` sub-directory for its [Dockerfile](file:///d:/laragon/www/Saturday%20Session/Saturday%20Hackathon/backend/Dockerfile) and service-specific OS/runtime configurations (FPM configs, Nginx templates).
+> - **Orchestration Isolation:** The master [docker-compose.yml](file:///d:/laragon/www/Saturday%20Session/Saturday%20Hackathon/docker-compose.yml) will be moved to a separate orchestration layer to keep the root purely for project meta-files.
+> - **Unified Ingress (Nginx):** Stays as the single entry point.
+
+---
+
+## 🛠️ Tools & Technologies
+| Category | Tool | Senior Logic |
+| :--- | :--- | :--- |
+| **Ingress** | Nginx | Single entry point, handling routing and SSL termination (local). |
+| **Backend** | Laravel 12 | Using latest features (e.g., enhanced concurrency, better type safety). |
+| **Frontend** | React 18 + Vite | Optimized build pipeline, modular architecture. |
+| **Database** | PostgreSQL | Better for performance metrics and complex query analysis than MySQL/SQLite. |
+| **Logging** | Monolog + Loki | Structured JSON logs with context-aware metadata (Request-ID, User-ID). |
+| **Tracing** | OpenTelemetry | Vendor-neutral instrumentation. |
+
+---
+
+## 🚀 Proposed Phases
+
+### Phase 1: Infrastructure Foundations
+1.  Initialize Project Structure:
+    - `mkdir backend frontend infrastructure`
+2.  Set up Laravel 12 in `backend/` and React (Vite) in `frontend/`.
+3.  Create [docker-compose.yml](file:///d:/laragon/www/Saturday%20Session/Saturday%20Hackathon/docker-compose.yml) in the root:
+    - Service `backend`: [backend/Dockerfile](file:///d:/laragon/www/Saturday%20Session/Saturday%20Hackathon/backend/Dockerfile), port `8000:80` (internal).
+    - Service `frontend`: [frontend/Dockerfile](file:///d:/laragon/www/Saturday%20Session/Saturday%20Hackathon/frontend/Dockerfile), port `3000:5173` (internal).
+    - Service `postgres` (Corrected from MySQL), `redis`.
+    - Service `nginx` (Port 80 exposure).
+    - Service `prometheus`, `grafana`, `loki`, `tempo`.
+4.  **Documentation:** Log setup in [HACKATHON_JOURNAL.md](file:///C:/Users/Hell%20Boy/.gemini/antigravity/brain/1e330cfb-491f-451a-8738-1509ce7b1a6d/HACKATHON_JOURNAL.md).
+
+### Phase 2: AI-Generated Scaffolding (App CRUD & Auth)
+1.  Initialize Laravel Backend and React Frontend.
+2.  Implement **Laravel Passport** for API authentication.
+3.  Implement "Hackathon Idea" Feature:
+    - **Model/Migration:** Idea table with status and user_id.
+    - **Form Requests:** `StoreIdeaRequest`, `UpdateIdeaRequest`.
+    - **Service Layer:** `IdeaService` for business logic.
+    - **API Resources:** `IdeaResource` and `IdeaCollection` for standardized JSON output.
+    - **Controller:** `IdeaController` (Logic-free).
+4.  React components for Listing, Submitting, and Auth (Login/Register).
+5.  **Verification:** Manual CRUD testing via Browser.
+
+### Phase 3: The Observability Stack
+1.  Configure Prometheus to scrape Laravel metrics (via a package like `spatie/laravel-prometheus`).
+2.  Integrate Loki for log aggregation.
+3.  Set up OpenTelemetry/Tempo for distributed tracing.
+4.  **Verification:** See the first logs/metrics appearing in Grafana.
+
+### Phase 4: Anomaly Injection & Proving
+1.  Create a "Chaos Controller" to inject manual delays and 500 errors.
+2.  Design Grafana Dashboards to visualize these failures.
+3.  Configure alerts (Slack/Email) for high error rates.
+4.  **Verification:** Trigger an anomaly and observe the alert.
+
+### Phase 5: Load Testing & Reliability
+1.  Use `k6` to run traffic simulations (5000+ requests).
+2.  Optimize Docker resources based on bottleneck findings.
+
+---
+
+## ✅ Verification Plan
+
+### Automated Tests
+- `npm test` / `php artisan test`: Standard unit/feature tests.
+- `k6 run load-test.js`: Performance verification.
+
+### Manual Verification
+1.  **Observability Check:** Open Grafana (`localhost:3000`) and verify all 3 pillars (Metrics, Logs, Traces) are receiving data.
+2.  **Anomaly Proof:** Call `/api/inject-error`, then find the resulting trace in Jaeger/Tempo to prove root cause isolation.
+3.  **User Flow:** Submit an idea and verify it appears in the list view.

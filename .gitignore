@@ -1,0 +1,36 @@
+# --- Dependencies ---
+backend/vendor/
+frontend/node_modules/
+
+# --- Environment ---
+.env
+backend/.env
+frontend/.env
+frontend/*.local
+
+# --- Backend Artifacts ---
+backend/storage/*.key
+backend/public/storage
+backend/public/build
+backend/bootstrap/cache/*
+
+# --- Frontend Artifacts ---
+frontend/dist/
+frontend/dist-ssr/
+
+# --- Infrastructure Data ---
+infrastructure/prometheus-data/
+infrastructure/grafana-data/
+infrastructure/hackathon-db/
+
+# --- Logs & OS ---
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# --- Antigravity Artifacts ---
+Antigravity Artifact/
+notebook_lm_source.md
+C:/Users/SumitKeshri/.gemini/antigravity/brain/7e2f6f90-78af-496c-9b30-d00ac717ce2c/
