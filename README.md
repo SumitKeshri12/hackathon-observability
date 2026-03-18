@@ -81,7 +81,7 @@ graph TD
 | Component          | Technology         | Role                       |
 | :----------------- | :----------------- | :------------------------- |
 | **Backend**  | Laravel 12.x       | OTel Instrumented API      |
-| **Frontend** | Vue 3 + Tailwind   | Premium Responsive UI      |
+| **Frontend** | React + Tailwind   | Premium Responsive UI      |
 | **Database** | PostgreSQL 16      | Relational Storage         |
 | **Metrics**  | Prometheus         | Timeseries Database        |
 | **Logs**     | Loki + Promtail    | Centralized Log Management |
