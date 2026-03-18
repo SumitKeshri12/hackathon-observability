@@ -21,7 +21,7 @@ graph TD
 
     subgraph "Application Layer"
         BE[Laravel API]
-        FE[Vue Frontend]
+        FE[React Frontend]
         RD[Redis]
     end
 
@@ -80,7 +80,7 @@ graph TD
 
 | Component          | Technology         | Role                       |
 | :----------------- | :----------------- | :------------------------- |
-| **Backend**  | Laravel 11.x       | OTel Instrumented API      |
+| **Backend**  | Laravel 12.x       | OTel Instrumented API      |
 | **Frontend** | Vue 3 + Tailwind   | Premium Responsive UI      |
 | **Database** | PostgreSQL 16      | Relational Storage         |
 | **Metrics**  | Prometheus         | Timeseries Database        |
